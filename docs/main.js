@@ -1,8 +1,11 @@
 import * as THREE from './js/three.module.js';
-import { DragControls } from './js/DragControls.js';
+//import { DragControls } from './js/DragControls.js';
+import { OrbitControls } from './js/OrbitControls.js';
+import * as UTILS from './js/utils.js';
 
 var container;
 var camera, scene, renderer;
+var controls;
 var objects = [];
 
 init();
@@ -13,7 +16,7 @@ function init() {
 	container = document.createElement( 'div' );
 	document.body.appendChild( container );
 
-	camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 5000 );
+	camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 5000 );
 	camera.position.z = 1000;
 
 	scene = new THREE.Scene();
@@ -38,19 +41,7 @@ function init() {
 	// 	[ {dx:0, dy:0.15, length: 0.25, height:0.15,depth:0.1}, {dx:0.28, dy:0.15, length:0.25, height:0.15,depth:0.1} ],
 	// ]
 
-	var data = [
-		[ {dx:0, dy:0, length:0.25, height:0.15,depth:0.1}, 
-		{dx:0.28, dy:0, length:0.25, height:0.15,depth:0.1},
-		{dx:0, dy:0.15, length: 0.25, height:0.15,depth:0.1},
-		{dx:0.28, dy:0.15, length:0.25, height:0.15,depth:0.1}],
-		[ {dx:0, dy:0, length:0.25, height:0.15,depth:0.1}, 
-		{dx:0.28, dy:0, length:0.25, height:0.15,depth:0.1},
-		{dx:0, dy:0.15, length: 0.25, height:0.15,depth:0.1},
-		{dx:0.28, dy:0.15, length:0.25, height:0.15,depth:0.1}],
-	]
-	
-
-	//data[0][0].dx
+	var data = UTILS.loadPythonFile("test.csv");
 
 	var geometry = new THREE.BoxBufferGeometry( 10, 10, 10 );
 	
@@ -91,26 +82,12 @@ function init() {
 	renderer.setPixelRatio( window.devicePixelRatio );
 	renderer.setSize( window.innerWidth, window.innerHeight );
 
+	addOrbit();
+
 	renderer.shadowMap.enabled = true;
 	renderer.shadowMap.type = THREE.PCFShadowMap;
 
 	container.appendChild( renderer.domElement );
-
-	var controls = new DragControls( objects, camera, renderer.domElement );
-
-	controls.addEventListener( 'dragstart', function ( event ) {
-
-		event.object.material.emissive.set( 0xaaaaaa );
-
-	} );
-
-	controls.addEventListener( 'dragend', function ( event ) {
-
-		event.object.material.emissive.set( 0x000000 );
-
-	} );
-
-	//
 
 	window.addEventListener( 'resize', onWindowResize, false );
 }
@@ -129,12 +106,23 @@ function onWindowResize() {
 function animate() {
 
 	requestAnimationFrame( animate );
-
 	render();
+    controls.update(); // required because damping is enabled
 
 }
 
 function render() {
 
 	renderer.render( scene, camera );
+}
+
+function addOrbit() {
+	controls = new OrbitControls(camera, renderer.domElement);
+	controls.enableDamping = true;
+	controls.dampingFactor = 0.1;
+	controls.screenSpacePanning = true;
+	controls.position0.set(27.51342323198951, 14.631490797857495, -23.519186481837153);
+	controls.target0.set( 25.322066856958944, 10.725374538158743,9.917616743457403 );
+	controls.reset();
+	window.controls = controls;        
 }
