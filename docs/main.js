@@ -8,26 +8,6 @@ var objects = [];
 init();
 animate();
 
-function loadPythonFile() {
-
-}
-
-window.triggerScreenshot = function() {
-
-// for ( var screenshot = 0; screenshot < 10; screenshot ++ ) {
- 	renderer.render( scene, camera );
- 	var strMime = "image/jpeg";
-	var imgData = renderer.domElement.toDataURL(strMime);
-	console.log(imgData)
-	window.open(imgData);
-// }
-}
-
-function configureBricks() {
-
-}
-
-
 function init() {
 
 	container = document.createElement( 'div' );
@@ -53,24 +33,49 @@ function init() {
 
 	scene.add( light );
 
-	var geometry = new THREE.BoxBufferGeometry( 40, 40, 40 );
+	// var data = [
+	// 	[ {dx:0, dy:0, length:0.25, height:0.15,depth:0.1}, {dx:0.28, dy:0, length:0.25, height:0.15,depth:0.1} ],
+	// 	[ {dx:0, dy:0.15, length: 0.25, height:0.15,depth:0.1}, {dx:0.28, dy:0.15, length:0.25, height:0.15,depth:0.1} ],
+	// ]
 
-	for ( var y = 0; y < 10; y ++ ) {
+	var data = [
+		[ {dx:0, dy:0, length:0.25, height:0.15,depth:0.1}, 
+		{dx:0.28, dy:0, length:0.25, height:0.15,depth:0.1},
+		{dx:0, dy:0.15, length: 0.25, height:0.15,depth:0.1},
+		{dx:0.28, dy:0.15, length:0.25, height:0.15,depth:0.1}],
+		[ {dx:0, dy:0, length:0.25, height:0.15,depth:0.1}, 
+		{dx:0.28, dy:0, length:0.25, height:0.15,depth:0.1},
+		{dx:0, dy:0.15, length: 0.25, height:0.15,depth:0.1},
+		{dx:0.28, dy:0.15, length:0.25, height:0.15,depth:0.1}],
+	]
+	
 
-	 for ( var x = 0; x < 10; x ++ ) {
+	//data[0][0].dx
+
+	var geometry = new THREE.BoxBufferGeometry( 10, 10, 10 );
+	
+	var row = data [0];
+	// for ( var j = 0; j < row.length; j ++ ) {
+	// for ( var i = 0; i < row[j].length; i ++ ) {
+
+	for ( var i = 0; i < row.length; i ++ ) {
 		var object = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ) );
 
-		object.position.x = x*120 + Math.random() * 1 - 700;
-		object.position.z = Math.random() * 10 - 300;
-		object.position.y = y*120 + Math.random() * 80 - 600;
+		object.position.x = row[i].dx*100;
+		object.position.z =100;
+		object.position.y = row[i].dy*100;
 
 		//object.rotation.x = Math.random() * 2 * Math.PI;
 		//object.rotation.y = Math.random() * 2 * Math.PI;
 		//object.rotation.z = Math.random() * 2 * Math.PI;
 
-		object.scale.x = Math.random() * 2 + 1;
-		object.scale.y = Math.random() * 2 + 1;
-		object.scale.z = Math.random() * 2 + 1;
+		// object.scale.x = Math.random() * 2 + 1;
+		// object.scale.y = Math.random() * 2 + 1;
+		// object.scale.z = Math.random() * 2 + 1;
+
+		object.scale.x = row[i].length*10;
+		object.scale.y = row[i].depth*10;
+		object.scale.z = row[i].height*10;
 
 		object.castShadow = true;
 		object.receiveShadow = true;
@@ -80,9 +85,9 @@ function init() {
 		objects.push( object );
 	 }
 
-	}
+	// }
 
-	renderer = new THREE.WebGLRenderer( { antialias: true, preserveDrawingBuffer: true } );
+	renderer = new THREE.WebGLRenderer( { antialias: true } );
 	renderer.setPixelRatio( window.devicePixelRatio );
 	renderer.setSize( window.innerWidth, window.innerHeight );
 
