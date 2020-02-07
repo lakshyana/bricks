@@ -57,6 +57,7 @@ function init() {
 		t.wrapS=1000;
 		t.wrapT=1000;
 	});
+	textureC.repeat.set( 6, 6 );
 
 	//Current row to load from data
 	var row = data [0];
@@ -68,7 +69,7 @@ function init() {
 	for(var j = 0; j<row.ys.length; j ++){ //Iterate over ys
 		for ( var i = 0; i < row.xs.length; i ++ ) { //Iterate over xs
 
-			var mat = new THREE.MeshLambertMaterial( { map: textureB } );
+			var mat = new THREE.MeshPhongMaterial( { map: textureB } );
 			 
 			//Create varying shades of color
 			mat.color.b = 0.22+Math.random() * 0.1; 
@@ -85,8 +86,8 @@ function init() {
 			object.position.y = row.ys[j]*80 -140;
 	
 			//object.rotation.x = Math.random() * 2 * Math.PI;
-			//object.rotation.y = Math.random() * 2 * Math.PI;
-			//object.rotation.z = Math.random() * 2 * Math.PI;
+			object.rotation.y = -0.04 + Math.random() * 0.02 * Math.PI;
+			object.rotation.z = -0.04 + Math.random() * 0.02 * Math.PI;
 
 			// object.scale.x = Math.random() * 2 + 1;
 			// object.scale.y = Math.random() * 2 + 1;
@@ -115,7 +116,7 @@ function init() {
         //ground.rotation.x = 0;
 		ground.position.x = 10;
 		ground.position.y = -36;
-		ground.position.z = 15;
+		ground.position.z = 16.5;
 		ground.scale.set(110,110,108)
         // ground.scale.multiplyScalar(110);
         ground.receiveShadow = true;
