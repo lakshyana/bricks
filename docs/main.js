@@ -47,13 +47,13 @@ function init() {
 
 	//Load Brick Texture
 
-	var textureB = THREE.ImageUtils.loadTexture("Brick_in_wall_close_up.jpg","",(t)=>{
+	var textureB = THREE.ImageUtils.loadTexture("bricktexture1.jpg","",(t)=>{
 		t.wrapS=1000;
 		t.wrapT=1000;
 	});
 
 	//Load Wall Texture
-	var textureC = THREE.ImageUtils.loadTexture("mortar.jpg","",(t)=>{
+	var textureC = THREE.ImageUtils.loadTexture("mortartexture1.jpg","",(t)=>{
 		t.wrapS=1000;
 		t.wrapT=1000;
 	});
