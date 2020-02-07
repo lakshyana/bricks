@@ -13,6 +13,8 @@ animate();
 
 function init() {
 
+	//Initial scene, camera, and lighting setup:
+
 	container = document.createElement( 'div' );
 	document.body.appendChild( container );
 
@@ -24,7 +26,7 @@ function init() {
 
 	scene.add( new THREE.AmbientLight( 0x505050 ) );
 
-	var light = new THREE.SpotLight( 0xffffff, 2 ); //brightness level
+	var light = new THREE.SpotLight( 0xffffff, 2 ); //for brightness level
 	light.position.set( 500, 500, 500 ); //for sunlight level
 	light.angle = Math.PI / 9;
 
@@ -34,19 +36,14 @@ function init() {
 	light.shadow.mapSize.width = 1024;
 	light.shadow.mapSize.height = 1024;
 
-	scene.add( light );
+	scene.add(light);
 
-	// var data = [
-	// 	[ {dx:0, dy:0, length:0.25, height:0.15,depth:0.1}, {dx:0.28, dy:0, length:0.25, height:0.15,depth:0.1} ],
-	// 	[ {dx:0, dy:0.15, length: 0.25, height:0.15,depth:0.1}, {dx:0.28, dy:0.15, length:0.25, height:0.15,depth:0.1} ],
-	// ]
+
+	//Load data generated from python script
 
 	// var data = UTILS.loadPythonFile("test.csv");
-
 	var data = [{"length":0.25,"height":0.15,"depth":0.1,"mortar_thickness_v":0.02,"mortar_thickness_h":0.03,"xs":[0,0.28,0.56,0.84,1.12,1.4,1.68,1.96,2.24, 2.52, 2.8],"ys":[0,0.17,0.34, 0.51, 0.68, 0.85, 1.02, 1.19,1.36,1.53,1.7,1.87, 2.04, 2.21,2.38],"offsets":[0,0.09,0.165,0.0975,0.1425,0.0975,0.1125, 0.15, 0.0825, 0.0975, 0.165, 0.0825, 0.15, 0.12, 0.135, 0.1575]},{"length":0.25,"height":0.15,"depth":0.1,"mortar_thickness_v":0.02,"mortar_thickness_h":0.03,"xs":[0,0.8],"ys":[0,0.15],"offsets":[0,0.09]}]
 
-
-	var geometry = new THREE.BoxBufferGeometry( 10, 10, 10 );
 
 	//Load Brick Texture
 
@@ -61,17 +58,28 @@ function init() {
 		t.wrapT=1000;
 	});
 
+	//Current row to load from data
 	var row = data [0];
 
-	for(var j = 0; j<row.ys.length; j ++){
-		for ( var i = 0; i < row.xs.length; i ++ ) {
-			var mat = new THREE.MeshLambertMaterial( { map: textureB } );
-			mat.color.b = 0.22+Math.random() * 0.1;
-			mat.color.g = 0.38+Math.random() * 0.08;
-			mat.color.r = 0.54;
-			var object = new THREE.Mesh( geometry, mat );
 
-	
+	//Initialize geometry
+	var geometry = new THREE.BoxBufferGeometry( 10, 10, 10 );
+
+	for(var j = 0; j<row.ys.length; j ++){ //Iterate over ys
+		for ( var i = 0; i < row.xs.length; i ++ ) { //Iterate over xs
+
+			var mat = new THREE.MeshLambertMaterial( { map: textureB } );
+			 
+			//Create varying shades of color
+			mat.color.b = 0.22+Math.random() * 0.1; 
+			mat.color.g = 0.35+Math.random() * 0.05;
+			mat.color.r = 0.45+Math.random() * 0.12;
+
+			var object = new THREE.Mesh( geometry, mat );
+			
+			//Original RGB%: 0.455,0.196,0.384
+			//b: *0.1,0.2; g:*0.08 r:*0.54
+
 			object.position.x = (row.xs[i]+row.offsets[j])*100 - 140;
 			object.position.z =10;
 			object.position.y = row.ys[j]*80 -140;
@@ -94,22 +102,14 @@ function init() {
 			scene.add( object );
 	
 			objects.push( object );
-			// var bbox = new THREE.Box3().setFromObject(object);
 		 }
 	}
 
-	// }
-
-	// var wall = new THREE.Object3D();
-	// wall.position(3,0,3);
-	// wall.scale(3,3);
-	// scene.add(wall);
-
-	function addFloor() {
-        // Setup floor
+	//Function to add plane to represent wall
+	function addWall() {
         var ground = new THREE.Mesh(
             new THREE.PlaneBufferGeometry(3, 2),
-            new THREE.MeshLambertMaterial({ map: textureC,
+            new THREE.MeshLambertMaterial({ map: textureC, //Also adding texture to wall
                 color: 0x999999, 	
             }));
         //ground.rotation.x = 0;
@@ -122,7 +122,7 @@ function init() {
         scene.add( ground );		
 	}
 	
- 	addFloor();
+ 	addWall();
 
 
 	renderer = new THREE.WebGLRenderer( { antialias: true } );
