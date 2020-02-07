@@ -1,29 +1,25 @@
 import * as THREE from './three.module.js';
 
-function loadPythonFile( url ) {
-	const data = [
-		[ {dx:0, dy:0, length:0.25, height:0.15,depth:0.1}, 
-		{dx:0.28, dy:0, length:0.25, height:0.15,depth:0.1},
-		{dx:0, dy:0.15, length: 0.25, height:0.15,depth:0.1},
-		{dx:0.28, dy:0.15, length:0.25, height:0.15,depth:0.1}],
-		[ {dx:0, dy:0, length:0.25, height:0.15,depth:0.1}, 
-		{dx:0.28, dy:0, length:0.25, height:0.15,depth:0.1},
-		{dx:0, dy:0.15, length: 0.25, height:0.15,depth:0.1},
-		{dx:0.28, dy:0.15, length:0.25, height:0.15,depth:0.1}],
-	];
+async function loadPythonFile( url ) {
+	let res = await fetch(url);
+	// clean up json where variables are missing "quotes":  {x:0} -> { "x" : 0 }
+	let badJson = await res.text();
+	let data = badJson.replace(/(['"])?([a-z0-9A-Z_]+)(['"])?:/g, '"$2": ');
+	data = JSON.parse(data);
     return data;
 }
 
-function triggerScreenshot( name, renderer, scene, camera ) {
-    console.log(`taking snapshot: ${name}`);
-// for ( var screenshot = 0; screenshot < 10; screenshot ++ ) {
- 	renderer.render( scene, camera );
- 	var strMime = "image/jpeg";
-	var imgData = renderer.domElement.toDataURL(strMime);
-	console.log(imgData)
-	window.open(imgData);
-// }
+function triggerScreenshot( fileName, renderer, scene, camera ) {
+    console.log(`taking snapshot: ${fileName}`);
+ for ( var screenshot = 0; screenshot < 5; screenshot ++ ) {
+	 renderer.render( scene, camera );
+	 camera.position.z += screenshot * 10;
+	var imgData = renderer.domElement.toDataURL("image/png");
+//	console.log(imgData);
+	var w = window.open('about:blank');
+	w.document.write("<img src='"+imgData+"' alt='from canvas'/>");
+ }
 }
 
 
-export {loadPythonFile, triggerScreenshot};
+export { loadPythonFile, triggerScreenshot };

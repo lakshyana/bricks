@@ -1,0 +1,10 @@
+[
+	[ {dx:0, dy:0, length:0.25, height:0.15,depth:0.1}, 
+	{dx:0.28, dy:0, length:0.25, height:0.15,depth:0.1},
+	{dx:0, dy:0.15, length: 0.25, height:0.15,depth:0.1},
+	{dx:0.28, dy:0.15, length:0.25, height:0.15,depth:0.1}],
+	[ {dx:0, dy:0, length:0.25, height:0.15,depth:0.1}, 
+	{dx:0.28, dy:0, length:0.25, height:0.15,depth:0.1},
+	{dx:0, dy:0.15, length: 0.25, height:0.15,depth:0.1},
+	{dx:0.28, dy:0.15, length:0.25, height:0.15,depth:0.1}]
+]
